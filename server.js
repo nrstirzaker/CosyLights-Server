@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 
+const port = process.env.PORT || 3000
 const registeredLights = new Map()
 
 app.get('/', (req, res) => {
@@ -43,6 +44,6 @@ app.put('/retrievepattern', (req, res) => {
 
 });
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+app.listen(port, () => {
+    console.log('listening on *:'+ port);
 });
