@@ -26,7 +26,7 @@ app.put('/requestpattern', (req, res) => {
             values.requestSentAt = DateTime.utc();
             registeredLights.set(req.query.name,values)
         }else{
-            const keyValue = {name: req.query.name, patternName:"DEFAULT", patternActive:true}
+            const keyValue = {name: req.query.name, patternName:"DEFAULT", patternActive:true, requestSentAt:DateTime.utc()};
             registeredLights.set(req.query.name,keyValue)
         }
     }
