@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 
 app.post('/register', (req, res) => {
     if (req.query.name){
-        const keyValue = {registeredName: req.query.name, pattern:"DEFAULT", patternActive:true}
+        const keyValue = {name: req.query.name, patternName:"DEFAULT", patternActive:true}
         registeredLights.set(req.query.name,keyValue)
     }
     res.sendStatus(200);
@@ -21,10 +21,13 @@ app.put('/requestpattern', (req, res) => {
     if (req.query.name){
         const values = registeredLights.get(req.query.name)
         if (values){
-            values.pattern = req.query.pattern;
+            values.patternName = req.query.patternName;
             values.patternActive = false;
             values.requestSentAt = DateTime.utc();
             registeredLights.set(req.query.name,values)
+        }else{
+            const keyValue = {name: req.query.name, patternName:"DEFAULT", patternActive:true}
+            registeredLights.set(req.query.name,keyValue)
         }
     }
     res.sendStatus(200);
