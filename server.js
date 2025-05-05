@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
+const { DateTime } = require("luxon");
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 const registeredLights = new Map()
 
 app.get('/', (req, res) => {
@@ -10,7 +11,7 @@ app.get('/', (req, res) => {
 
 app.post('/register', (req, res) => {
     if (req.query.name){
-        const keyValue = {registeredName: req.query.name,pattern:"DEFAULT",patternActive:true}
+        const keyValue = {registeredName: req.query.name, pattern:"DEFAULT", patternActive:true}
         registeredLights.set(req.query.name,keyValue)
     }
     res.sendStatus(200);
@@ -22,6 +23,7 @@ app.put('/requestpattern', (req, res) => {
         if (values){
             values.pattern = req.query.pattern;
             values.patternActive = false;
+            values.requestSentAt = DateTime.utc();
             registeredLights.set(req.query.name,values)
         }
     }
@@ -34,7 +36,7 @@ app.put('/retrievepattern', (req, res) => {
         if (values){
             values.patternActive = true;
             registeredLights.set(req.query.name,values)
-            res.json(values);
+            res.status(200).json(values);
         }else{
             res.sendStatus(500);
         }
