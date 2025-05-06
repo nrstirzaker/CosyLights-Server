@@ -17,6 +17,15 @@ app.post('/register', (req, res) => {
     res.sendStatus(200);
 });
 
+app.get('/registered', (req, res) => {
+    const registeredNames = []
+    registeredLights.keys().forEach(key => {
+        registeredNames.push(key);
+    })
+    const values = {names: registeredNames}
+    res.status(200).json(values);
+});
+
 app.put('/requestpattern', (req, res) => {
     if (req.query.name){
         const values = registeredLights.get(req.query.name)
