@@ -11,18 +11,18 @@ app.get('/', (req, res) => {
 
 app.post('/register', (req, res) => {
     if (req.query.name){
-        const keyValue = {name: req.query.name, patternName:"DEFAULT", patternActive:true}
+        const keyValue = {name: req.query.name, patternName:"DEFAULT", patternActive:true,lastUpdated:DateTime.now().toLocaleString(DateTime.DATETIME_SHORT)}
         registeredLights.set(req.query.name,keyValue)
     }
     res.sendStatus(200);
 });
 
 app.get('/registered', (req, res) => {
-    const registeredNames = []
+    const details = []
     registeredLights.keys().forEach(key => {
-        registeredNames.push(key);
+        details.push(registeredLights.get(key));
     })
-    const values = {names: registeredNames}
+    const values = {names: details}
     res.status(200).json(values);
 });
 
@@ -32,10 +32,10 @@ app.put('/requestpattern', (req, res) => {
         if (values){
             values.patternName = req.query.patternName;
             values.patternActive = false;
-            values.requestSentAt = DateTime.utc();
+            values.requestSentAt = DateTime.now().toLocaleString(DateTime.DATETIME_SHORT);
             registeredLights.set(req.query.name,values)
         }else{
-            const keyValue = {name: req.query.name, patternName:"DEFAULT", patternActive:true, requestSentAt:DateTime.utc()};
+            const keyValue = {name: req.query.name, patternName:"DEFAULT", patternActive:true, requestSentAt:DateTime.now().toLocaleString(DateTime.DATETIME_SHORT)};
             registeredLights.set(req.query.name,keyValue)
         }
     }
@@ -47,6 +47,7 @@ app.put('/retrievepattern', (req, res) => {
         const values = registeredLights.get(req.query.name)
         if (values){
             values.patternActive = true;
+            values.lastUpdated = DateTime.now().toLocaleString(DateTime.DATETIME_SHORT);
             registeredLights.set(req.query.name,values)
             res.status(200).json(values);
         }else{
