@@ -27,7 +27,7 @@ app.get('/registered', (req, res) => {
     registeredLights.keys().forEach(key => {
         details.push(registeredLights.get(key));
     })
-    const values = {names: details}
+    const values = {lights: details}
     res.status(200).json(values);
 });
 
